@@ -19,6 +19,7 @@ public:
 	int PORT = 8080;
 	const string EROOR_SOCKET = "Error al crear el socket";
 	const string ERROR_CONECTAR = "Error al connectar";
+	const string ERROR_LISTENING = "No se escucha elemento";
 	const string WAITING = "Esperando el cliente";
 	const string CONNECT = "Conecto";
 	const string SENDINFO_MSJ = "Bytes enviados; ";

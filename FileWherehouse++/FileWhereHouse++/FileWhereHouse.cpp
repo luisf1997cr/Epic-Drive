@@ -7,11 +7,11 @@
 
 #include "FileWhereHouse.h"
 
-FileWhereHouse::FileWhereHouse(int pPortNumber, char* pIpNumber, char pFileUbication) {
+FileWhereHouse::FileWhereHouse(int pPortNumber, char* pIpNumber, string pFileUbication) {
 	this->portNumber=pPortNumber;
 	this->ipNumber=pIpNumber;
 	this->fileUbication=pFileUbication;
-	TCPAcceptor * server = new TCPAcceptor(portNumber ,ipNumber);
+	this->server = new TCPAcceptor(portNumber ,ipNumber);
 }
 
 FileWhereHouse::~FileWhereHouse() {

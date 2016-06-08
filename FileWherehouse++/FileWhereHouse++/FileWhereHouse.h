@@ -11,12 +11,13 @@
 
 class FileWhereHouse {
 public:
-	FileWhereHouse(int pPortNumbre, char* pIpNumber, char pFileUbication);
+	FileWhereHouse(int pPortNumbre, char* pIpNumber, string pFileUbication);
 	virtual ~FileWhereHouse();
 
 	int portNumber;
 	char* ipNumber;
-	char fileUbication;
+	string fileUbication;
+	TCPAcceptor *server;
 };
 
 #endif /* FILEWHEREHOUSE___FILEWHEREHOUSE_H_ */
