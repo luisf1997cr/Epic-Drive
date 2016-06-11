@@ -5,31 +5,29 @@
  *      Author: acacia
  */
 
+using namespace std;
 #ifndef STRUCTURES_BNODE_H_
 #define STRUCTURES_BNODE_H_
-using namespace std;
-
+template<class AnyType>
 class BNode {
 public:
 	BNode(int pMinimunDegree, bool pLeaf);
 	virtual ~BNode();
 
-	friend class BTree;
-
 private:
-	int *Keys; //Arreglo de llaves
+	AnyType* Keys; //Arreglo de llaves
 	int minimunDegree; //Dato minimo del arreglo
-	BNode **childNode; //Puntero a los arrays hijos
+	BNode<AnyType> **childNode; //Puntero a los arrays hijos
 	int nKeys; //Numero de llaves de cada elemento
 	bool leaf; //Define si el arrreglo es una hoja
 
 public:
-	void insertNonFull(int pkey);
-	void splitChild(int pNumber, BNode *child);
+	void insertNonFull(AnyType pkey);
+	void splitChild(int pNumber, BNode<AnyType> *child);
 	void traverse();
-	BNode * search(int pKey);
-	int findKey(int pkey);
-	void remove(int pKey);
+	BNode<AnyType>* search(AnyType pKey);
+	int findKey(AnyType pkey);
+	void remove(AnyType pKey);
 	void removeFromLeaf(int pIndexPosition);
 	void removeFromNonLeaf(int pIndexPosition);
 	int getPredecessorKey(int pIndexPosition);
@@ -38,22 +36,36 @@ public:
 	void borrowFromPrev(int pIndexPosition);
 	void borrowFromNext(int pIndexPosition);
 	void merge(int pIndexPosition);
-};
+	void setKey(int position,AnyType pKey);
+	AnyType getKey(int position);
+	void setMinimunDegree(int pMinimun);
+	int getMinimunDegree();
+	void setChildNode(BNode<AnyType> *pChild,int position);
+	BNode<AnyType>* getChildNode(int position);
+	void setNumberKeys(int pNumber);
+	int getNumberKeys();
+	bool isLeaf();
+	void setLeaf(bool pLeaf);
 
-BNode::BNode(int pMinimunDegree, bool pLeaf) {
+
+};
+template<class AnyType>
+BNode<AnyType>::BNode(int pMinimunDegree, bool pLeaf) {
 	this->minimunDegree=pMinimunDegree;
 	this->leaf=pLeaf;
 
-	this->Keys= new int[2*minimunDegree-1];
-	this->childNode = new BNode *[2*minimunDegree];
+	this->Keys= new AnyType[2*minimunDegree-1];
+	this->childNode = new BNode<AnyType> *[2*minimunDegree];
 
 	this->nKeys=0;
 }
 
-BNode::~BNode() {
+template<class AnyType>
+BNode<AnyType>::~BNode() {
 }
 
-void BNode::insertNonFull(int pkey) {
+template<class AnyType>
+void BNode<AnyType>::insertNonFull(AnyType pkey) {
 	int i = this->nKeys-1;
 
     // If this is a leaf node
@@ -96,11 +108,12 @@ void BNode::insertNonFull(int pkey) {
     }
 }
 
-void BNode::splitChild(int pNumber, BNode* child) {
+template<class AnyType>
+void BNode<AnyType>::splitChild(int pNumber, BNode<AnyType>* child) {
 
 	// Create a new node which is going to store (t-1) keys
 	// of y
-	BNode *tmp = new BNode(child->minimunDegree, child->leaf);
+	BNode<AnyType> *tmp = new BNode<AnyType>(child->minimunDegree, child->leaf);
 	tmp->nKeys = this->minimunDegree - 1;
 
 	// Copy the last (t-1) keys of y to z
@@ -139,7 +152,8 @@ void BNode::splitChild(int pNumber, BNode* child) {
 	this->nKeys = this->nKeys + 1;
 }
 
-void BNode::traverse() {
+template<class AnyType>
+void BNode<AnyType>::traverse() {
 	// There are n keys and n+1 children, travers through n keys
 	// and first n children
 	int i;
@@ -158,7 +172,8 @@ void BNode::traverse() {
 	}
 }
 
-BNode* BNode::search(int pKey) {
+template<class AnyType>
+BNode<AnyType>* BNode<AnyType>::search(AnyType pKey) {
 	// Find the first key greater than or equal to k
 	    int i = 0;
 	    while (i < this->nKeys && pKey > this->Keys[i]){
@@ -176,7 +191,8 @@ BNode* BNode::search(int pKey) {
 	    return this->childNode[i]->search(pKey);
 }
 
-int BNode::findKey(int pkey) {
+template<class AnyType>
+int BNode<AnyType>::findKey(AnyType pkey) {
 
 	int indexNumber=0;
 	while(indexNumber<this->nKeys && this->Keys[indexNumber]<pkey){
@@ -185,7 +201,8 @@ int BNode::findKey(int pkey) {
 	return indexNumber;
 }
 
-void BNode::remove(int pKey) {
+template<class AnyType>
+void BNode<AnyType>::remove(AnyType pKey) {
 
 	int indexNumber = findKey(pKey);
 
@@ -217,7 +234,8 @@ void BNode::remove(int pKey) {
 	return;
 }
 
-void BNode::removeFromLeaf(int pIndexPosition) {
+template<class AnyType>
+void BNode<AnyType>::removeFromLeaf(int pIndexPosition) {
 
 	for(int i=pIndexPosition+1;i<this->nKeys;++i){
 		Keys[i-1]=Keys[i];
@@ -226,7 +244,8 @@ void BNode::removeFromLeaf(int pIndexPosition) {
 	nKeys--;
 }
 
-void BNode::removeFromNonLeaf(int pIndexPosition) {
+template<class AnyType>
+void BNode<AnyType>::removeFromNonLeaf(int pIndexPosition) {
 	int key = this->Keys[pIndexPosition];
 
 	if(childNode[pIndexPosition]->nKeys>=this->minimunDegree){
@@ -247,24 +266,27 @@ void BNode::removeFromNonLeaf(int pIndexPosition) {
 	}
 }
 
-int BNode::getPredecessorKey(int pIndexPosition) {
+template<class AnyType>
+int BNode<AnyType>::getPredecessorKey(int pIndexPosition) {
 
-	BNode* curNode=childNode[pIndexPosition];
+	BNode<AnyType>* curNode=childNode[pIndexPosition];
 	while(!curNode->leaf){
 		curNode = curNode->childNode[curNode->nKeys];
 	}
 	return curNode->Keys[curNode->nKeys-1];
 }
 
-int BNode::getSuccesorKey(int pIndexPosition) {
-	BNode* curNode=childNode[pIndexPosition+1];
+template<class AnyType>
+int BNode<AnyType>::getSuccesorKey(int pIndexPosition) {
+	BNode<AnyType>* curNode=childNode[pIndexPosition+1];
 	while(!curNode->leaf){
 		curNode = curNode->childNode[0];
 	}
 	return curNode->Keys[0];
 }
 
-void BNode::fill(int pIndexPosition) {
+template<class AnyType>
+void BNode<AnyType>::fill(int pIndexPosition) {
 
 	if(pIndexPosition!=0 && childNode[pIndexPosition-1]->nKeys>=this->minimunDegree){
 		borrowFromPrev(pIndexPosition);
@@ -283,9 +305,10 @@ void BNode::fill(int pIndexPosition) {
 	}
 }
 
-void BNode::borrowFromPrev(int pIndexPosition) {
-	BNode* child=childNode[pIndexPosition];
-	BNode* sibling= childNode[pIndexPosition-1];
+template<class AnyType>
+void BNode<AnyType>::borrowFromPrev(int pIndexPosition) {
+	BNode<AnyType>* child=childNode[pIndexPosition];
+	BNode<AnyType>* sibling= childNode[pIndexPosition-1];
 
 	for(int i=child->nKeys-1;i>=0;--i){
 		child->Keys[i+1] = child->Keys[i];
@@ -308,10 +331,11 @@ void BNode::borrowFromPrev(int pIndexPosition) {
 	return;
 }
 
-void BNode::borrowFromNext(int pIndexPosition) {
+template<class AnyType>
+void BNode<AnyType>::borrowFromNext(int pIndexPosition) {
 
-	BNode* child=childNode[pIndexPosition];
-	BNode* sibling= childNode[pIndexPosition+1];
+	BNode<AnyType>* child=childNode[pIndexPosition];
+	BNode<AnyType>* sibling= childNode[pIndexPosition+1];
 
 	child->Keys[child->nKeys]=this->Keys[pIndexPosition];
 
@@ -337,10 +361,11 @@ void BNode::borrowFromNext(int pIndexPosition) {
 	return;
 }
 
-void BNode::merge(int pIndexPosition) {
+template<class AnyType>
+void BNode<AnyType>::merge(int pIndexPosition) {
 
-	BNode* child=childNode[pIndexPosition];
-	BNode* sibling= childNode[pIndexPosition+1];
+	BNode<AnyType>* child=childNode[pIndexPosition];
+	BNode<AnyType>* sibling= childNode[pIndexPosition+1];
 
 	child->Keys[this->minimunDegree-1]=this->Keys[pIndexPosition];
 
@@ -367,6 +392,56 @@ void BNode::merge(int pIndexPosition) {
 
 	delete(sibling);
 	return;
+}
+
+template<class AnyType>
+void BNode<AnyType>::setLeaf(bool pLeaf){
+	this->leaf = pLeaf;
+}
+
+template<class AnyType>
+bool BNode<AnyType>::isLeaf(){
+	return(this->leaf);
+}
+
+template<class AnyType>
+void BNode<AnyType>::setChildNode(BNode<AnyType>* pChildNode,int position){
+	this->childNode[position] = pChildNode;
+}
+
+template<class AnyType>
+BNode<AnyType>* BNode<AnyType>::getChildNode(int position){
+	return (this->childNode[position]);
+}
+
+template<class AnyType>
+void BNode<AnyType>::setKey(int position,AnyType pKeys){
+	this->Keys[position]=pKeys;
+}
+
+template<class AnyType>
+AnyType BNode<AnyType>::getKey(int position){
+	return(this->Keys[position]);
+}
+
+template<class AnyType>
+void BNode<AnyType>::setMinimunDegree(int pMinimun){
+	this->minimunDegree=pMinimun;
+}
+
+template<class AnyType>
+int BNode<AnyType>::getMinimunDegree(){
+	return (this->minimunDegree);
+}
+
+template<class AnyType>
+int BNode<AnyType>::getNumberKeys(){
+	return this->nKeys;
+}
+
+template<class AnyType>
+void BNode<AnyType>::setNumberKeys(int pNumber){
+	this->nKeys=pNumber;
 }
 
 #endif /* STRUCTURES_BNODE_H_ */

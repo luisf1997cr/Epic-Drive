@@ -10,56 +10,61 @@
 #include "BNode.h"
 using namespace std;
 
+template<class AnyType>
 class BTree {
 public:
 	BTree(int pMinimunDegree);
 	virtual ~BTree();
-
 private:
-	BNode* root;
+	BNode<AnyType>* root;
 	int minimunDegree;
 
 public:
 	void traverse();
-	BNode* searchNode(int pKey);
-	void insert(int pKey);
-	void remove(int pKey);
+	BNode<AnyType>* searchNode(AnyType pKey);
+	void insert(AnyType pKey);
+	void remove(AnyType pKey);
 };
 
-BTree::BTree(int pMinimunDegree) {
+template<class AnyType>
+BTree<AnyType>::BTree(int pMinimunDegree) {
 	this->root=0;
 	this->minimunDegree=pMinimunDegree;
 }
 
-BTree::~BTree() {
+template<class AnyType>
+BTree<AnyType>::~BTree() {
 }
 
-void BTree::traverse() {
+template<class AnyType>
+void BTree<AnyType>::traverse() {
 	if(root != 0){
 		this->root->traverse();
 	}
 }
 
-BNode* BTree::searchNode(int pKey) {
+template<class AnyType>
+BNode<AnyType>* BTree<AnyType>::searchNode(AnyType pKey) {
 	return (root==0)? 0: this->root->search(pKey);
 }
 
-void BTree::insert(int pKey) {
+template<class AnyType>
+void BTree<AnyType>::insert(AnyType pKey) {
 	 if (root == 0)
 	    {
-	        root = new BNode(this->minimunDegree, true);
-	        root->Keys[0] = pKey;
-	        root->nKeys = 1;
+	        root = new BNode<AnyType>(this->minimunDegree, true);
+	        root->setKey(0,pKey);
+	        root->setNumberKeys(1);
 	    }
 	    else
 	    {
-	        if (root->nKeys == 2*this->minimunDegree-1)
+	        if (root->getNumberKeys() == 2*this->minimunDegree-1)
 	        {
 	            // Allocate memory for new root
-	            BNode *s = new BNode(this->minimunDegree, false);
+	            BNode<AnyType> *s = new BNode<AnyType>(this->minimunDegree, false);
 
 	            // Make old root as child of new root
-	            s->childNode[0] = root;
+	            s->setChildNode(root,0);
 
 	            // Split the old root and move 1 key to the new root
 	            s->splitChild(0, root);
@@ -68,11 +73,11 @@ void BTree::insert(int pKey) {
 	            // two children is going to have new key
 	            int i = 0;
 
-	            if (s->Keys[0] < pKey){
+	            if (s->getKey(0) < pKey){
 	                i++;
 	            }
 
-	            s->childNode[i]->insertNonFull(pKey);
+	            s->getChildNode(i)->insertNonFull(pKey);
 
 	            // Change root
 	            root = s;
@@ -82,7 +87,8 @@ void BTree::insert(int pKey) {
 	    }
 }
 
-void BTree::remove(int pKey) {
+template<class AnyType>
+void BTree<AnyType>::remove(AnyType pKey) {
 	 if (!root){
 	        cout << "El arbol se encuentra vacio";
 	        return;
@@ -93,14 +99,14 @@ void BTree::remove(int pKey) {
 
 	    // If the root node has 0 keys, make its first child as the new root
 	    //  if it has a child, otherwise set root as NULL
-	    if (root->nKeys==0)
+	    if (root->getNumberKeys()==0)
 	    {
-	        BNode *tmp = root;
-	        if (root->leaf){
+	        BNode<AnyType> *tmp = root;
+	        if (root->isLeaf()){
 	            root = 0;
 	        }
 	        else{
-	            root = root->childNode[0];
+	            root = root->getChildNode(0);
 	        }
 	        // Free the old root
 	        delete tmp;
