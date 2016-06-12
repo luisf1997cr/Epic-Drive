@@ -11,7 +11,14 @@ using namespace std;
 template<class AnyType>
 class BNode {
 public:
+	/**
+	 * @brief Constructor de la clase del Nodo.
+	 * @param El tamano de array del arbol, si tiene hojas o no.
+	 */
 	BNode(int pMinimunDegree, bool pLeaf);
+	/**
+	 *@brief Destructor de la clase
+	 */
 	virtual ~BNode();
 
 private:
@@ -22,29 +29,158 @@ private:
 	bool leaf; //Define si el arrreglo es una hoja
 
 public:
+	/**
+	 * @brief Metodo encargado de insertar una llave en el nodo de un arbol, es utilizada cuando el nodo se encuentra vacio
+	 * @param La llave que se desea insertar
+	 * @return void(No retorna nada)
+	 */
 	void insertNonFull(AnyType pkey);
+
+	/**
+	 * @brief Metodo encargado dividir el nodo hijo, esta funcion es utilizada cuando se encuentra lleno.
+	 * @param pNumber, numero del indice a la cual apunta el punteros del childNOde. child es el nodo hijo al cual se desea buscar.
+	 * @return void
+	 */
 	void splitChild(int pNumber, BNode<AnyType> *child);
+
+	/**
+	 * @brief Metodo encargado de atravesar todo el alrbol por sus nodos y pintarlos en pantalla
+	 */
 	void traverse();
+
+	/**
+	 * @brief Funcion encargada de encontrar una llave especifica en un nodo del arbol, toma como raiz el nodo en el que se busca
+	 * @param La llave del arbol que se desea encontrar
+	 * @return Si se encuentra la pKey retorna su direccion sino retorna Null
+	 */
 	BNode<AnyType>* search(AnyType pKey);
+
+	/**
+	 * @brief Metodo encargado de regresar el indece donde se encuentra la primera clave que es mayor o igual a pKey
+	 * @param pKey la llave que se desea buscar
+	 * @return el indice del pKey
+	 */
 	int findKey(AnyType pkey);
+
+	/**
+	 * @brief Funcion envoltorio encargada de remover la llave pKey de un nodo
+	 * @param pKey, la llave
+	 */
 	void remove(AnyType pKey);
+
+	/**
+	 * @brief Metodo encargado de remover la llave que se encuentra en el nodo hoja en la posicion pIndexPosition.
+	 * @param pIndexPosition, posicion en el nodo.
+	 */
 	void removeFromLeaf(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de eliminar una llave de un nodo que no es una hoja (raiz)
+	 * @param pIndexPosition, posicion en el nodo al que se desea eliminar
+	 */
 	void removeFromNonLeaf(int pIndexPosition);
-	int getPredecessorKey(int pIndexPosition);
-	int getSuccesorKey(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de obtener la llave superior, de la llave en la cual esta e pIndexPosition
+	 * @param pIndexPosition, posicion en el nodo al que se desea eliminar.
+	 * @return El valor de la llave
+	 */
+	AnyType getPredecessorKey(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de obtener la llave anterior, de la llave en la cual esta e pIndexPosition
+	 * @param pIndexPosition, posicion en el nodo al que se desea eliminar.
+	 * @return El valor de la llave
+	 */
+	AnyType getSuccesorKey(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de llanar un nodo hijo, en la posicion del indice, si el nodo tiene uno menos del minimumDegree,
+	 *@param pIndexPosition, posicion en el nodo al que se desea eliminar.
+	 *@return void
+	 */
 	void fill(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de tomar la llave del nodo en la posicion C(indice+1) y remplazarlo por el de la posicion siguiente.
+	 * @param pIndexPosition, posicion en el nodo al que se desea eliminar.
+	 * @return void
+	 */
 	void borrowFromPrev(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de tomar la llave del nodo en la posicion C(indice-1) y remplazarlo en el nodo anterior.
+	 * @param pIndexPosition, posicion en el nodo al que se desea eliminar.
+	 * @return void
+	 */
 	void borrowFromNext(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de partir dos nodos
+	 * @param pIndexPosition, posicion en el nodo al que se desea eliminar.
+	 *
+	 */
 	void merge(int pIndexPosition);
+
+	/**
+	 * @brief Metodo encargado de cambiar una llave en el array
+	 * @param La posicion de la llave y la llave
+	 */
 	void setKey(int position,AnyType pKey);
+
+	/**
+	 * @brief Metodo encargado de obtener la llave en una posicion especifica
+	 * @return la llave
+	 */
 	AnyType getKey(int position);
+
+	/**
+	 * @brief Metodo para cambiar el MinuminDegree de un arbol
+	 * @param El valor numerico
+	 */
 	void setMinimunDegree(int pMinimun);
+
+	/**
+	 * @brief Metodo encargado de obtener el valor minimo de casilla del arbol
+	 * @return Valor numerico con el dato
+	 */
 	int getMinimunDegree();
+
+	/**
+	 * @brief Metodo encargado de cambiar un nodo del array
+	 *@param El nodo y la ubicacion del nodo
+	 */
 	void setChildNode(BNode<AnyType> *pChild,int position);
+
+	/**
+	 * @brief Metodo encargado de obtener el valor de un nodo
+	 * @param La posicion
+	 * @return el puntero al nodo
+	 */
 	BNode<AnyType>* getChildNode(int position);
+
+	/**
+	 * @brief Cambia el valor del numero del contador de llaves
+	 * @param el valor numerico
+	 */
 	void setNumberKeys(int pNumber);
+
+	/**
+	 * @brief Obtiene la cantidad de llaves
+	 * @return el valor numerico
+	 */
 	int getNumberKeys();
+
+	/**
+	 * @brief Obtiene si el nodo tiene una hoja
+	 * @return Retorna el valor de la hoja
+	 */
 	bool isLeaf();
+
+	/**
+	 * @brief Cambia el valor de un nodo con respecto a sus hojas
+	 * @param el nuevo valor booleano
+	 */
 	void setLeaf(bool pLeaf);
 
 
@@ -267,7 +403,7 @@ void BNode<AnyType>::removeFromNonLeaf(int pIndexPosition) {
 }
 
 template<class AnyType>
-int BNode<AnyType>::getPredecessorKey(int pIndexPosition) {
+AnyType BNode<AnyType>::getPredecessorKey(int pIndexPosition) {
 
 	BNode<AnyType>* curNode=childNode[pIndexPosition];
 	while(!curNode->leaf){
@@ -277,7 +413,7 @@ int BNode<AnyType>::getPredecessorKey(int pIndexPosition) {
 }
 
 template<class AnyType>
-int BNode<AnyType>::getSuccesorKey(int pIndexPosition) {
+AnyType BNode<AnyType>::getSuccesorKey(int pIndexPosition) {
 	BNode<AnyType>* curNode=childNode[pIndexPosition+1];
 	while(!curNode->leaf){
 		curNode = curNode->childNode[0];

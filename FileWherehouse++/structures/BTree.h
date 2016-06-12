@@ -13,17 +13,55 @@ using namespace std;
 template<class AnyType>
 class BTree {
 public:
+	/**
+	 * @brief Constructor de la clase del BTree.
+	 * @param El tamano de de casillas por nodo.
+	 */
 	BTree(int pMinimunDegree);
+	/**
+	 * Destructor de la clase
+	 */
 	virtual ~BTree();
 private:
 	BNode<AnyType>* root;
 	int minimunDegree;
 
 public:
+	/**
+	 * @brief Metodo encargado de atravesar todo el alrbol por sus nodos y pintarlos en pantalla
+	 */
 	void traverse();
+
+	/**
+	 * @brief Metodo encargado de buscar una llave en el arbol
+	 * @param La llave que se desea buscar
+	 * @return Un puntero con la ubicacion de la llave
+	 */
 	BNode<AnyType>* searchNode(AnyType pKey);
+
+	/**
+	 * @brief Metodo encargado de insertar una llave en el arbol
+	 * @param La llave que se desea insertar
+	 */
 	void insert(AnyType pKey);
+
+	/**
+	 * @brief Metodo encargado de eliminar una llave en el arbol
+	 * @param La llave que se desea insertar
+	 */
 	void remove(AnyType pKey);
+
+	/**
+	 * Cambia el valor maximo de casillas por nodo
+	 * @param el valor numerico
+	 */
+	void setMinimunDegree(int pNumber);
+
+	/**
+	 * @brief Metodo encargado de obtener el valor maximo de casillas por nodo
+	 * @return el valor numerico
+	 */
+	int getMinimunDegree();
 };
 
 template<class AnyType>
@@ -112,6 +150,16 @@ void BTree<AnyType>::remove(AnyType pKey) {
 	        delete tmp;
 	    }
 	    return;
+}
+
+template<class AnyType>
+void BTree<AnyType>::setMinimunDegree(int pNumber){
+	this->minimunDegree=pNumber;
+}
+
+template<class AnyType>
+int BTree<AnyType>::getMinimunDegree(){
+	return(this->minimunDegree);
 }
 
 #endif /* STRUCTURES_BTREE_H_ */

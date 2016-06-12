@@ -21,7 +21,7 @@ int main(){
 //	prueba->server->acceptt();
 //	cout<< "Fin 10" <<endl;
 
-	BTree<int>* pruebaArbolB= new BTree<int>(3);
+	BTree<int>* pruebaArbolB= new BTree<int>(5);
 
 	pruebaArbolB->insert(1);
 	pruebaArbolB->insert(3);
@@ -46,6 +46,6 @@ int main(){
 	pruebaArbolB->traverse();
 	cout<<endl;
 
-	BNode<int>* t = pruebaArbolB->searchNode(100);
+	cout<<pruebaArbolB->searchNode(100)<<endl;
 
 }
